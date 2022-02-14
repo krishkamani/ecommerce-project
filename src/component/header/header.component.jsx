@@ -7,6 +7,9 @@ import { ReactComponent as Logo } from '../../assets/crown.svg'
 import { connect } from 'react-redux';
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
+import {createStructuredSelector} from 'reselect';
+import { selectCurrentUser } from '../../redux/user/user.selector';
+import { selectCartHidden } from '../../redux/cart/cart.selectors';
 
 const Header = ({ currentUser, hidden }) => {
     return (
@@ -37,9 +40,12 @@ const Header = ({ currentUser, hidden }) => {
     );
 }
 
-const mapStateToProps = state => ({
-    currentUser: state.user.currentUser,
-    hidden : state.cart.hidden
+const mapStateToProps = createStructuredSelector({
+    // To avoid multiple time state pass as below we use createStructuredSelector
+    // currentUser: selectCurrentUser(state),
+    // hidden : selectCartHidden(state)
+    currentUser : selectCurrentUser,
+    hidden : selectCartHidden
 });
 
 export default connect(mapStateToProps)(Header);

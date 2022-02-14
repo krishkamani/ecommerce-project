@@ -9,6 +9,17 @@ import { connect } from 'react-redux';
 import { setCurrentUser } from './redux/user/user.action';
 
 import './App.css';
+import { selectCurrentUser } from './redux/user/user.selector';
+import {createStructuredSelector} from 'reselect';
+import CheckoutPage from './pages/checkout/checkout.component';
+import { useNavigate  } from 'react-router-dom';
+export const withRouter = (Component) => {
+	const Wrapper = (props) => {
+		const history = useNavigate();
+		return <Component history={history} {...props} />;
+	};
+	return Wrapper;
+};
 
 class App extends React.Component {
  
@@ -53,6 +64,7 @@ class App extends React.Component {
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='/shop' element={<ShopPage />} />
+          <Route exact path='/checkout' element={<CheckoutPage />} />
           <Route exact path='/signin' 
             element={
               this.props.currentUser ? (
@@ -68,8 +80,8 @@ class App extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  currentUser: state.user.currentUser
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -77,4 +89,4 @@ const mapDispatchToProps = dispatch => ({
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
